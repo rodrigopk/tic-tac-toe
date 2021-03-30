@@ -28,6 +28,12 @@
     "tic-tac-toe-e2e": {
       "tags": [],
       "implicitDependencies": ["tic-tac-toe"]
+    },
+    "ui": {
+      "tags": []
+    },
+    "domain": {
+      "tags": []
     }
   }
 }
