@@ -3,8 +3,7 @@
 // [6 7 8]
 
 import { Player } from './player';
-
-type Position = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+import { Position } from './position';
 
 export class Game {
   private WINNING_POSITIONS = [
@@ -43,7 +42,7 @@ export class Game {
     return playerHasWon;
   }
 
-  private getPlayerPositionIndices(player: Player) {
+  public getPlayerPositionIndices(player: Player) {
     return this.positions
       .map((val, index) => (val === player.symbol ? index : null))
       .filter((val) => val !== null);
@@ -57,8 +56,25 @@ export class Game {
   }
 
   public isGameOver() {
-    if (this.positions.some((val) => val === '')) return false;
+    if (this.positions.some((pos) => pos === '')) return false;
 
     return true;
+  }
+
+  public isEmpty() {
+    return this.positions.every((pos) => pos === '');
+  }
+
+  public isOpponentInCorner(player: Player) {
+    const opponent = Player.getOppositePlayer(player);
+    const opponentIndices = this.getPlayerPositionIndices(opponent);
+
+    return opponentIndices.some((i) => [0, 2, 6, 8].includes(i));
+  }
+
+  public getEmptyPositions(): Position[] {
+    return this.positions
+      .filter((pos) => pos === '')
+      .map((_pos, index) => index) as Position[];
   }
 }
