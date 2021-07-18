@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 // https://en.wikipedia.org/wiki/Tic-tac-toe
 
 // [0 1 2]  [    x]
@@ -104,18 +105,55 @@ export class ComputerPlayer {
   }
 
   private getForkMove(game: Game): NextMove | null {
-    return this.getForkMoveForPlayer(game, this.player);
+    return this.getForkMoveForPlayer({ game, player: this.player });
   }
 
   private getForkBlockMove(game: Game): NextMove | null {
-    return this.getForkMoveForPlayer(
+    const opponent = Player.getOppositePlayer(this.player);
+    const opponentForks = this.getPossibleForkPositionsForPlayer(
       game,
-      Player.getOppositePlayer(this.player)
+      opponent
     );
+
+    if (opponentForks.length === 1) {
+      return { position: opponentForks[0] };
+    } else {
+      // TODO: If no fork move is possible, try to get 2 in a row
+      const move = this.getForkMoveForPlayer({
+        game,
+        player: this.player,
+        excludedPositions: opponentForks,
+      });
+      debugger;
+      return move;
+    }
   }
 
-  private getForkMoveForPlayer(game: Game, player: Player): NextMove | null {
-    const emptyPositions = game.getEmptyPositions();
+  private getPossibleForkPositionsForPlayer(game: Game, player: Player) {
+    let forkMove = this.getForkMoveForPlayer({ game, player });
+    const excludedPositions: Position[] = [];
+
+    while (forkMove !== null) {
+      excludedPositions.push(forkMove.position);
+
+      forkMove = this.getForkMoveForPlayer({ game, player, excludedPositions });
+    }
+
+    return excludedPositions;
+  }
+
+  private getForkMoveForPlayer({
+    game,
+    player,
+    excludedPositions = [],
+  }: {
+    game: Game;
+    player: Player;
+    excludedPositions?: Position[];
+  }): NextMove | null {
+    const emptyPositions = game
+      .getEmptyPositions()
+      .filter((pos) => !excludedPositions.includes(pos));
     let forkMove = null;
     let epIt = 0;
 

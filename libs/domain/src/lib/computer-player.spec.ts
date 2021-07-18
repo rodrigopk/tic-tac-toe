@@ -148,7 +148,7 @@ describe('ComputerPlayer', () => {
 
       describe('given the opponent has two possible forks', () => {
         describe('given there is a block that creates a winnable move', () => {
-          it('moves to create a winnable move', () => {
+          it.only('moves to create a winnable move', () => {
             const game = Game.create()
               .addPlayerPiece(opponent, 2)
               .addPlayerPiece(cp, 4)

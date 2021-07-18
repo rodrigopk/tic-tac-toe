@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 // [0 1 2]
 // [3 4 5]
 // [6 7 8]
@@ -73,8 +74,14 @@ export class Game {
   }
 
   public getEmptyPositions(): Position[] {
-    return this.positions
-      .filter((pos) => pos === '')
-      .map((_pos, index) => index) as Position[];
+    const emptyPositions: Position[] = [];
+
+    for (const i in this.positions) {
+      if (this.positions[i] === '') {
+        emptyPositions.push(parseInt(i, 10) as Position);
+      }
+    }
+
+    return emptyPositions;
   }
 }
